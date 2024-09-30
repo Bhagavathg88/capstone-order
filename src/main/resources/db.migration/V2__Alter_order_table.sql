@@ -1,0 +1,4 @@
+Alter table ORDERS ADD (
+    PRODUCT_NAME VARCHAR(255) ,
+    PRICE DECIMAL(10, 2)
+);
