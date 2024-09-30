@@ -18,7 +18,7 @@ spec:
           image: postgres:15
           env:
             - name: POSTGRES_DB
-              value: "inventoryDB"
+              value: "orderDB"
             - name: POSTGRES_USER
               value: "postgres"
             - name: POSTGRES_PASSWORD
