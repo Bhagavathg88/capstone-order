@@ -1,5 +1,6 @@
 package com.spring.microservices.service;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.spring.microservices.model.Inventory;
 import com.spring.microservices.model.Product;
 import com.spring.microservices.model.ProductResponse;
@@ -19,10 +20,16 @@ public class ProxyService {
         restTemplate = new RestTemplate();
     }
 
+    @HystrixCommand(fallbackMethod = "fallbackGetProduct")
     public Product getProduct(Long id){
         return restTemplate.getForObject("http://localhost:8090/product/"+id, Product.class);
     }
 
+    public Product fallbackGetProduct(Long productId) {
+        return new Product();
+    }
+
+    @HystrixCommand(fallbackMethod = "fallbackGetProductResponse")
     public ProductResponse getProductByZipcode(Long id, Integer zipcode){
 
         return restTemplate.getForObject("http://localhost:8090/product/"+id+"/"+zipcode, ProductResponse.class);
@@ -32,6 +39,10 @@ public class ProxyService {
         HttpEntity<Inventory> request = new HttpEntity<>(inventory);
         restTemplate.exchange("http://localhost:8092/inventory/"+id+"/"+zipcode, HttpMethod.POST, request,Inventory.class);
 
+    }
+
+    public ProductResponse fallbackGetProductResponse(Long productId, Long zipCode) {
+        return new ProductResponse();
     }
 
 }
